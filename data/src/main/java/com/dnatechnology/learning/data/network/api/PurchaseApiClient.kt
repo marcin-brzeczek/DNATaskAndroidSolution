@@ -1,6 +1,8 @@
-package io.dnatechnology.dnataskandroid.ui.api
+package com.dnatechnology.learning.data.network.api
 
-import io.dnatechnology.dnataskandroid.ui.api.data.*
+import com.dnatechnology.learning.data.network.requests.PurchaseRequest
+import com.dnatechnology.learning.data.network.requests.PurchaseResponse
+import com.dnatechnology.learning.data.network.requests.TransactionStatus
 import kotlinx.coroutines.delay
 import java.util.*
 
@@ -23,7 +25,11 @@ class PurchaseApiClient {
     suspend fun initiatePurchaseTransaction(purchaseRequest: PurchaseRequest): PurchaseResponse {
         delay(250)
         if (purchaseRequest.order.isEmpty()) {
-            return PurchaseResponse(purchaseRequest.order, UUID.randomUUID().toString(), TransactionStatus.FAILED)
+            return PurchaseResponse(
+                purchaseRequest.order,
+                UUID.randomUUID().toString(),
+                TransactionStatus.FAILED
+            )
         }
 
         return try {
@@ -38,16 +44,27 @@ class PurchaseApiClient {
                 entry.value * orderedProduct.unitNetValue * (1.0 + orderedProduct.tax)
             }.sum()
 
-            PurchaseResponse(purchaseRequest.order, UUID.randomUUID().toString(), TransactionStatus.INITIATED)
+            PurchaseResponse(
+                purchaseRequest.order,
+                UUID.randomUUID().toString(),
+                TransactionStatus.INITIATED
+            )
         } catch (e: Exception) {
-            PurchaseResponse(purchaseRequest.order, UUID.randomUUID().toString(), TransactionStatus.FAILED)
+            PurchaseResponse(
+                purchaseRequest.order,
+                UUID.randomUUID().toString(),
+                TransactionStatus.FAILED
+            )
         }
     }
 
-    suspend fun confirm(purchaseRequest: PurchaseConfirmRequest): PurchaseStatusResponse {
+    suspend fun confirm(purchaseRequest: com.dnatechnology.learning.data.network.requests.PurchaseConfirmRequest): com.dnatechnology.learning.data.network.requests.PurchaseStatusResponse {
         delay(250)
         if (purchaseRequest.order.isEmpty()) {
-            return PurchaseStatusResponse(purchaseRequest.transactionID, TransactionStatus.FAILED)
+            return com.dnatechnology.learning.data.network.requests.PurchaseStatusResponse(
+                purchaseRequest.transactionID,
+                TransactionStatus.FAILED
+            )
         }
 
         return try {
@@ -61,18 +78,30 @@ class PurchaseApiClient {
             }.sum()
 
             if (sum > 100.0) {
-                return PurchaseStatusResponse(purchaseRequest.transactionID, TransactionStatus.FAILED)
+                return com.dnatechnology.learning.data.network.requests.PurchaseStatusResponse(
+                    purchaseRequest.transactionID,
+                    TransactionStatus.FAILED
+                )
             }
 
-            return PurchaseStatusResponse(purchaseRequest.transactionID, TransactionStatus.INITIATED)
+            return com.dnatechnology.learning.data.network.requests.PurchaseStatusResponse(
+                purchaseRequest.transactionID,
+                TransactionStatus.INITIATED
+            )
         } catch (e: Exception) {
-            return PurchaseStatusResponse(purchaseRequest.transactionID, TransactionStatus.FAILED)
+            return com.dnatechnology.learning.data.network.requests.PurchaseStatusResponse(
+                purchaseRequest.transactionID,
+                TransactionStatus.FAILED
+            )
         }
     }
 
-    suspend fun cancel(purchaseRequest: PurchaseCancelRequest): PurchaseStatusResponse {
+    suspend fun cancel(purchaseRequest: com.dnatechnology.learning.data.network.requests.PurchaseCancelRequest): com.dnatechnology.learning.data.network.requests.PurchaseStatusResponse {
         delay(250)
-        return PurchaseStatusResponse(purchaseRequest.transactionID, TransactionStatus.CANCELLED)
+        return com.dnatechnology.learning.data.network.requests.PurchaseStatusResponse(
+            purchaseRequest.transactionID,
+            TransactionStatus.CANCELLED
+        )
     }
 
 }

@@ -1,4 +1,4 @@
-package io.dnatechnology.dnataskandroid.ui.api.data
+package com.dnatechnology.learning.data.network.requests
 
 data class PaymentRequest(val transactionID: String, val amount: Double, val currency: String, val cardToken: String)
 

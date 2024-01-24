@@ -1,7 +1,12 @@
 package io.dnatechnology.dnataskandroid
 
-import io.dnatechnology.dnataskandroid.ui.api.PaymentApiClient
-import io.dnatechnology.dnataskandroid.ui.api.PurchaseApiClient
+import com.dnatechnology.learning.data.network.api.PaymentApiClient
+import com.dnatechnology.learning.data.network.api.PurchaseApiClient
+import com.dnatechnology.learning.data.network.requests.PaymentRequest
+import com.dnatechnology.learning.data.network.requests.PaymentStatus
+import com.dnatechnology.learning.data.network.requests.PurchaseConfirmRequest
+import com.dnatechnology.learning.data.network.requests.PurchaseRequest
+import com.dnatechnology.learning.data.network.requests.TransactionStatus
 import io.dnatechnology.dnataskandroid.ui.api.data.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -9,12 +14,12 @@ import org.junit.Test
 import org.junit.Assert.*
 
 class PaymentAPITests {
-    private val paymentAPI = PaymentApiClient()
+    private val paymentAPI = com.dnatechnology.learning.data.network.api.PaymentApiClient()
 
     @Test
     fun whenCorrectDataThenSuccess() = runBlocking {
         // given
-        val paymentRequest = PaymentRequest(
+        val paymentRequest = com.dnatechnology.learning.data.network.requests.PaymentRequest(
             transactionID = "Tr1",
             amount = 33.66,
             currency = "EUR",
@@ -25,13 +30,13 @@ class PaymentAPITests {
         val paymentResponse =  paymentAPI.pay(paymentRequest)
 
         // then
-        assertEquals(paymentResponse.status, PaymentStatus.SUCCESS)
+        assertEquals(paymentResponse.status, com.dnatechnology.learning.data.network.requests.PaymentStatus.SUCCESS)
     }
 
     @Test
     fun whenIncorrectAmountThenFail() = runBlocking {
         // given
-        val paymentRequest = PaymentRequest(
+        val paymentRequest = com.dnatechnology.learning.data.network.requests.PaymentRequest(
             transactionID = "Tr1",
             amount = 19.66,
             currency = "EUR",
@@ -42,13 +47,13 @@ class PaymentAPITests {
         val paymentResponse =  paymentAPI.pay(paymentRequest)
 
         // then
-        assertEquals(paymentResponse.status, PaymentStatus.FAILED)
+        assertEquals(paymentResponse.status, com.dnatechnology.learning.data.network.requests.PaymentStatus.FAILED)
     }
 
     @Test
     fun whenIncorrectCurrencyThenFail() = runBlocking {
         // given
-        val paymentRequest = PaymentRequest(
+        val paymentRequest = com.dnatechnology.learning.data.network.requests.PaymentRequest(
             transactionID = "Tr1",
             amount = 22.66,
             currency = "PLN",
@@ -59,13 +64,13 @@ class PaymentAPITests {
         val paymentResponse =  paymentAPI.pay(paymentRequest)
 
         // then
-        assertEquals(paymentResponse.status, PaymentStatus.FAILED)
+        assertEquals(paymentResponse.status, com.dnatechnology.learning.data.network.requests.PaymentStatus.FAILED)
     }
 
     @Test
     fun whenRevertingCorrectAmountThenSuccess() = runBlocking {
         // given
-        val paymentRequest = PaymentRequest(
+        val paymentRequest = com.dnatechnology.learning.data.network.requests.PaymentRequest(
             transactionID = "Tr1",
             amount = 12.66,
             currency = "EUR",
@@ -76,13 +81,13 @@ class PaymentAPITests {
         val paymentResponse =  paymentAPI.revert(paymentRequest)
 
         // then
-        assertEquals(paymentResponse.status, PaymentStatus.SUCCESS)
+        assertEquals(paymentResponse.status, com.dnatechnology.learning.data.network.requests.PaymentStatus.SUCCESS)
     }
 
     @Test
     fun whenRevertingIncorrectAmountThenFail() = runBlocking {
         // given
-        val paymentRequest = PaymentRequest(
+        val paymentRequest = com.dnatechnology.learning.data.network.requests.PaymentRequest(
             transactionID = "Tr1",
             amount = 0.66,
             currency = "EUR",
@@ -93,12 +98,12 @@ class PaymentAPITests {
         val paymentResponse =  paymentAPI.revert(paymentRequest)
 
         // then
-        assertEquals(paymentResponse.status, PaymentStatus.FAILED)
+        assertEquals(paymentResponse.status, com.dnatechnology.learning.data.network.requests.PaymentStatus.FAILED)
     }
 }
 
 class PurchaseAPITests {
-    private val purchaseApiClient = PurchaseApiClient()
+    private val purchaseApiClient = com.dnatechnology.learning.data.network.api.PurchaseApiClient()
 
     @Test
     fun whenGetProductsThenSuccess() = runBlocking {
@@ -112,7 +117,7 @@ class PurchaseAPITests {
     @Test
     fun whenInitiateEmptyOrderThenFail() = runBlocking {
         // given
-       val purchaseRequest = PurchaseRequest(
+       val purchaseRequest = com.dnatechnology.learning.data.network.requests.PurchaseRequest(
            mapOf()
        )
 
@@ -120,13 +125,13 @@ class PurchaseAPITests {
         val purchaseResponse =  purchaseApiClient.initiatePurchaseTransaction(purchaseRequest)
 
         // then
-        assertEquals(purchaseResponse.transactionStatus, TransactionStatus.FAILED)
+        assertEquals(purchaseResponse.transactionStatus, com.dnatechnology.learning.data.network.requests.TransactionStatus.FAILED)
     }
 
     @Test
     fun whenInitiateOrderWithZeroItemsThenFail() = runBlocking {
         // given
-        val purchaseRequest = PurchaseRequest(
+        val purchaseRequest = com.dnatechnology.learning.data.network.requests.PurchaseRequest(
             mapOf("12345" to 0)
         )
 
@@ -134,13 +139,13 @@ class PurchaseAPITests {
         val purchaseResponse =  purchaseApiClient.initiatePurchaseTransaction(purchaseRequest)
 
         // then
-        assertEquals(purchaseResponse.transactionStatus, TransactionStatus.FAILED)
+        assertEquals(purchaseResponse.transactionStatus, com.dnatechnology.learning.data.network.requests.TransactionStatus.FAILED)
     }
 
     @Test
     fun whenInitiateOrderWithToManyItemsThenFail() = runBlocking {
         // given
-        val purchaseRequest = PurchaseRequest(
+        val purchaseRequest = com.dnatechnology.learning.data.network.requests.PurchaseRequest(
             mapOf("12348" to 2001)
         )
 
@@ -148,13 +153,13 @@ class PurchaseAPITests {
         val purchaseResponse =  purchaseApiClient.initiatePurchaseTransaction(purchaseRequest)
 
         // then
-        assertEquals(purchaseResponse.transactionStatus, TransactionStatus.FAILED)
+        assertEquals(purchaseResponse.transactionStatus, com.dnatechnology.learning.data.network.requests.TransactionStatus.FAILED)
     }
 
     @Test
     fun whenConfirmrderWithToManyItemsThenFail() = runBlocking {
         // given
-        val purchaseRequest = PurchaseConfirmRequest(
+        val purchaseRequest = com.dnatechnology.learning.data.network.requests.PurchaseConfirmRequest(
             mapOf("12348" to 2001),
             "Tr2"
         )
@@ -163,6 +168,6 @@ class PurchaseAPITests {
         val purchaseResponse =  purchaseApiClient.confirm(purchaseRequest)
 
         // then
-        assertEquals(purchaseResponse.status, TransactionStatus.FAILED)
+        assertEquals(purchaseResponse.status, com.dnatechnology.learning.data.network.requests.TransactionStatus.FAILED)
     }
 }
