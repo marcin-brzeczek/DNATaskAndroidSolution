@@ -38,3 +38,10 @@ To perform payment you must:
 - initiate purchase transaction
 - call payment API using transaction identifier and card token read from reader API
 - confirm purchase transaction after successful payment
+
+# Result
+
+
+https://github.com/marcin-brzeczek/DNATaskAndroidSolution/assets/24879552/db0c0fac-9de3-491e-ba7c-a7ad7067b4fa
+
+
