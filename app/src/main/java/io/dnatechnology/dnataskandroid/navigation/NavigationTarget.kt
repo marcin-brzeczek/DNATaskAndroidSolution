@@ -1,0 +1,3 @@
+package io.dnatechnology.dnataskandroid.navigation
+
+interface NavigationTarget
